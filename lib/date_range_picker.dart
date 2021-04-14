@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_date_pickers/src/date_period.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 // Color and setups
 const Color _selectedDayItemBackgroundColor = Color(0xFF6547AD);
@@ -520,7 +518,7 @@ class DayPicker extends StatelessWidget {
               fontFamily: "TTChocolatesMedium",
               fontSize: 16,
               color: _selectedDayTextColor);
-          if (isFirstDay && isLastFromRightSide || isLastDay) {
+          if (isFirstDay && isLastFromRightSide || isLastDay || isLastFromRightSide) {
           } else {
             decoration = new BoxDecoration(
                 gradient: RainbowGradient(
@@ -949,7 +947,7 @@ class _MonthPickerState extends State<MonthPicker>
               child: new FadeTransition(
                 opacity: _chevronOpacityAnimation,
                 child: new IconButton(
-                  icon: SvgPicture.asset(widget.icArrowLeftPath),
+                  icon: Image(image: AssetImage(widget.icArrowLeftPath)),
                   tooltip: _isDisplayingFirstMonth
                       ? null
                       : '${localizations.previousMonthTooltip} ${localizations.formatMonthYear(_previousMonthDate)}',
@@ -967,7 +965,7 @@ class _MonthPickerState extends State<MonthPicker>
               child: new FadeTransition(
                 opacity: _chevronOpacityAnimation,
                 child: new IconButton(
-                  icon: SvgPicture.asset(widget.icArrowRightPath),
+                  icon: Image(image: AssetImage(widget.icArrowRightPath)),
                   tooltip: _isDisplayingLastMonth
                       ? null
                       : '${localizations.nextMonthTooltip} ${localizations.formatMonthYear(_nextMonthDate)}',
@@ -1241,7 +1239,7 @@ class _DatePickerDialogState extends State<_DatePickerDialog> {
         lastDate = _selectedFirstDate;
       }
       // developer.log('firstDate: $firstDate, lastDate: $lastDate');
-      widget.cb(new DatePeriod(firstDate, lastDate));
+      widget.cb(firstDate, lastDate);
     });
   }
 
