@@ -6,14 +6,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-// Color and setups
-const Color _selectedDayItemBackgroundColor = Color(0xFF6547AD);
-const Color _rangeItemsBackgroundColor = Color(0xFF291D47);
-const Color _currentDayTextColor = Colors.white;
-const Color _selectedDayTextColor = Colors.white;
-const Color _disabledDayTextColor = Colors.white12;
-const Color _headerDayNameTextColor = Color(0xFFFF6F71);
-const Color _calendarBackgroundColor = Color(0xFF47327A);
 const bool _isHeaderShow = false;
 const double _monthNamePaddingTopBottom = 21.0;
 // Height of Item in Calendar
@@ -287,6 +279,15 @@ class DayPicker extends StatelessWidget {
     @required this.lastDate,
     @required this.displayedMonth,
     this.selectableDayPredicate,
+    this.selectedDayItemBackgroundColor,
+    this.rangeItemsBackgroundColor,
+    this.selectedDayTextColor,
+    this.disabledDayTextColor,
+    this.headerDayNameTextColor,
+    this.calendarBackgroundColor,
+    this.fontFamilyMedium,
+    this.fontFamilyRegular,
+    this.fontFamilyBold
   })  : assert(selectedFirstDate != null),
         assert(currentDate != null),
         assert(onChanged != null),
@@ -321,6 +322,17 @@ class DayPicker extends StatelessWidget {
 
   /// Optional user supplied predicate function to customize selectable days.
   final SelectableDayPredicate selectableDayPredicate;
+
+  final Color selectedDayItemBackgroundColor;
+  final Color rangeItemsBackgroundColor;
+  final Color selectedDayTextColor;
+  final Color disabledDayTextColor;
+  final Color headerDayNameTextColor;
+  final Color calendarBackgroundColor;
+
+  final String fontFamilyMedium;
+  final String fontFamilyRegular;
+  final String fontFamilyBold;
 
   /// Builds widgets showing abbreviated days of week. The first widget in the
   /// returned list corresponds to the first day of week for the current locale.
@@ -443,8 +455,8 @@ class DayPicker extends StatelessWidget {
     final List<Widget> labels = <Widget>[];
     labels.addAll(_getDayHeaders(
         themeData.textTheme.caption.copyWith(
-            color: _headerDayNameTextColor,
-            fontFamily: "TTChocolatesDemiBold",
+            color: headerDayNameTextColor,
+            fontFamily: fontFamilyBold,
             fontSize: 16),
         localizations));
     // ignore: literal_only_boolean_expressions
@@ -486,9 +498,9 @@ class DayPicker extends StatelessWidget {
         BoxDecoration decoration;
         Color circleBackgroundColor = Colors.transparent;
         TextStyle itemStyle = themeData.textTheme.body1.copyWith(
-            fontFamily: "TTChocolatesRegular",
+            fontFamily: fontFamilyRegular,
             fontSize: 16,
-            color: _selectedDayTextColor);
+            color: selectedDayTextColor);
         final bool isSelectedFirstDay = selectedFirstDate.year == year &&
             selectedFirstDate.month == month &&
             selectedFirstDate.day == day;
@@ -506,37 +518,39 @@ class DayPicker extends StatelessWidget {
             (isSelectedLastDay == null || isSelectedLastDay)) {
           // First Selected day
           itemStyle = themeData.textTheme.body2.copyWith(
-              fontFamily: "TTChocolatesMedium",
+              fontFamily: fontFamilyMedium,
               fontSize: 16,
-              color: _selectedDayTextColor);
+              color: selectedDayTextColor);
           decoration = new BoxDecoration(
-              color: _selectedDayItemBackgroundColor, shape: BoxShape.circle);
+              color: selectedDayItemBackgroundColor, shape: BoxShape.circle);
         } else if (isSelectedFirstDay) {
           // First Selected day in Range
           // The selected day gets a circle background highlight, and a contrasting text color.
           itemStyle = themeData.textTheme.body2.copyWith(
-              fontFamily: "TTChocolatesMedium",
+              fontFamily: fontFamilyMedium,
               fontSize: 16,
-              color: _selectedDayTextColor);
-          if (isFirstDay && isLastFromRightSide || isLastDay || isLastFromRightSide) {
+              color: selectedDayTextColor);
+          if (isFirstDay && isLastFromRightSide ||
+              isLastDay ||
+              isLastFromRightSide) {
           } else {
             decoration = new BoxDecoration(
                 gradient: RainbowGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: <Color>[
-                _calendarBackgroundColor,
-                _rangeItemsBackgroundColor
+                calendarBackgroundColor,
+                rangeItemsBackgroundColor
               ],
             ));
           }
-          circleBackgroundColor = _selectedDayItemBackgroundColor;
+          circleBackgroundColor = selectedDayItemBackgroundColor;
         } else if (isSelectedLastDay != null && isSelectedLastDay) {
           // Last Selected day in Range
           itemStyle = themeData.textTheme.body2.copyWith(
-              fontFamily: "TTChocolatesMedium",
+              fontFamily: fontFamilyMedium,
               fontSize: 16,
-              color: _selectedDayTextColor);
+              color: selectedDayTextColor);
           if (isLastDay && isFirstFromLeftSide ||
               isFirstDay ||
               isFirstFromLeftSide) {
@@ -546,35 +560,35 @@ class DayPicker extends StatelessWidget {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: <Color>[
-                _rangeItemsBackgroundColor,
-                _calendarBackgroundColor
+                rangeItemsBackgroundColor,
+                calendarBackgroundColor
               ],
             ));
           }
-          circleBackgroundColor = _selectedDayItemBackgroundColor;
+          circleBackgroundColor = selectedDayItemBackgroundColor;
         } else if (isInRange != null && isInRange) {
           // Items in Range
           if (isFirstFromLeftSide) {
             decoration = new BoxDecoration(
-                color: _rangeItemsBackgroundColor,
+                color: rangeItemsBackgroundColor,
                 borderRadius: BorderRadius.only(
                   topLeft: new Radius.circular(50.0),
                   bottomLeft: new Radius.circular(50.0),
                 ));
           } else if (isLastFromRightSide) {
             decoration = new BoxDecoration(
-                color: _rangeItemsBackgroundColor,
+                color: rangeItemsBackgroundColor,
                 borderRadius: BorderRadius.only(
                   topRight: new Radius.circular(50.0),
                   bottomRight: new Radius.circular(50.0),
                 ));
           } else {
             decoration = new BoxDecoration(
-                color: _rangeItemsBackgroundColor, shape: BoxShape.rectangle);
+                color: rangeItemsBackgroundColor, shape: BoxShape.rectangle);
           }
           if (isFirstDay) {
             decoration = new BoxDecoration(
-                color: _rangeItemsBackgroundColor,
+                color: rangeItemsBackgroundColor,
                 borderRadius: BorderRadius.only(
                   topLeft: new Radius.circular(50.0),
                   bottomLeft: new Radius.circular(50.0),
@@ -583,7 +597,7 @@ class DayPicker extends StatelessWidget {
           if (isFirstFromLeftSide && isLastDay ||
               isLastFromRightSide && isFirstDay) {
             decoration = new BoxDecoration(
-                color: _rangeItemsBackgroundColor,
+                color: rangeItemsBackgroundColor,
                 borderRadius: BorderRadius.only(
                   topRight: new Radius.circular(50.0),
                   bottomRight: new Radius.circular(50.0),
@@ -592,24 +606,24 @@ class DayPicker extends StatelessWidget {
                 ));
           } else if (isLastDay) {
             decoration = new BoxDecoration(
-                color: _rangeItemsBackgroundColor,
+                color: rangeItemsBackgroundColor,
                 borderRadius: BorderRadius.only(
                     topRight: new Radius.circular(50.0),
                     bottomRight: new Radius.circular(50.0)));
           }
         } else if (disabled) {
           itemStyle = themeData.textTheme.body1.copyWith(
-              fontFamily: "TTChocolatesRegular",
+              fontFamily: fontFamilyRegular,
               fontSize: 16,
-              color: _disabledDayTextColor);
+              color: disabledDayTextColor);
         } else if (currentDate.year == year &&
             currentDate.month == month &&
             currentDate.day == day) {
           // The current day gets a different text color.
           itemStyle = themeData.textTheme.body1.copyWith(
-              fontFamily: "TTChocolatesRegular",
+              fontFamily: fontFamilyRegular,
               fontSize: 16,
-              color: _selectedDayTextColor,
+              color: selectedDayTextColor,
               fontWeight: FontWeight.bold);
         }
 
@@ -680,9 +694,9 @@ class DayPicker extends StatelessWidget {
               child: new ExcludeSemantics(
                 child: new Text(localizations.formatMonthYear(displayedMonth),
                     style: themeData.textTheme.body1.copyWith(
-                        fontFamily: "TTChocolatesDemiBold",
+                        fontFamily: fontFamilyBold,
                         fontSize: 16,
-                        color: _selectedDayTextColor)),
+                        color: selectedDayTextColor)),
               ),
             ),
           ),
@@ -726,6 +740,15 @@ class MonthPicker extends StatefulWidget {
     this.selectableDayPredicate,
     this.icArrowLeftPath,
     this.icArrowRightPath,
+    this.selectedDayItemBackgroundColor,
+    this.rangeItemsBackgroundColor,
+    this.selectedDayTextColor,
+    this.disabledDayTextColor,
+    this.headerDayNameTextColor,
+    this.calendarBackgroundColor,
+    this.fontFamilyMedium,
+    this.fontFamilyRegular,
+    this.fontFamilyBold
   })  : assert(selectedFirstDate != null),
         assert(onChanged != null),
         assert(!firstDate.isAfter(lastDate)),
@@ -755,6 +778,17 @@ class MonthPicker extends StatefulWidget {
 
   final String icArrowLeftPath;
   final String icArrowRightPath;
+
+  final Color selectedDayItemBackgroundColor;
+  final Color rangeItemsBackgroundColor;
+  final Color selectedDayTextColor;
+  final Color disabledDayTextColor;
+  final Color headerDayNameTextColor;
+  final Color calendarBackgroundColor;
+
+  final String fontFamilyMedium;
+  final String fontFamilyRegular;
+  final String fontFamilyBold;
 
   @override
   _MonthPickerState createState() => new _MonthPickerState();
@@ -850,15 +884,24 @@ class _MonthPickerState extends State<MonthPicker>
   Widget _buildItems(BuildContext context, int index) {
     final DateTime month = _addMonthsToMonthDate(widget.firstDate, index);
     return new DayPicker(
-      key: new ValueKey<DateTime>(month),
-      selectedFirstDate: widget.selectedFirstDate,
-      selectedLastDate: widget.selectedLastDate,
-      currentDate: _todayDate,
-      onChanged: widget.onChanged,
-      firstDate: widget.firstDate,
-      lastDate: widget.lastDate,
-      displayedMonth: month,
-      selectableDayPredicate: widget.selectableDayPredicate,
+        key: new ValueKey<DateTime>(month),
+        selectedFirstDate: widget.selectedFirstDate,
+        selectedLastDate: widget.selectedLastDate,
+        currentDate: _todayDate,
+        onChanged: widget.onChanged,
+        firstDate: widget.firstDate,
+        lastDate: widget.lastDate,
+        displayedMonth: month,
+        selectableDayPredicate: widget.selectableDayPredicate,
+        selectedDayItemBackgroundColor: widget.selectedDayItemBackgroundColor,
+        rangeItemsBackgroundColor: widget.rangeItemsBackgroundColor,
+        selectedDayTextColor: widget.selectedDayTextColor,
+        disabledDayTextColor: widget.disabledDayTextColor,
+        headerDayNameTextColor: widget.headerDayNameTextColor,
+        calendarBackgroundColor: widget.calendarBackgroundColor,
+        fontFamilyMedium: widget.fontFamilyMedium,
+        fontFamilyRegular: widget.fontFamilyRegular,
+        fontFamilyBold: widget.fontFamilyBold
     );
   }
 
@@ -1125,6 +1168,15 @@ class _DatePickerDialog extends StatefulWidget {
     this.cb,
     this.icArrowLeftPath,
     this.icArrowRightPath,
+    this.selectedDayItemBackgroundColor,
+    this.rangeItemsBackgroundColor,
+    this.selectedDayTextColor,
+    this.disabledDayTextColor,
+    this.headerDayNameTextColor,
+    this.calendarBackgroundColor,
+    this.fontFamilyRegular,
+    this.fontFamilyMedium,
+    this.fontFamilyBold
   }) : super(key: key);
 
   final DateTime initialFirstDate;
@@ -1134,20 +1186,71 @@ class _DatePickerDialog extends StatefulWidget {
   final SelectableDayPredicate selectableDayPredicate;
   final DatePickerMode initialDatePickerMode;
   final Function cb;
+
   final String icArrowLeftPath;
   final String icArrowRightPath;
+
+  final Color selectedDayItemBackgroundColor;
+  final Color rangeItemsBackgroundColor;
+  final Color selectedDayTextColor;
+  final Color disabledDayTextColor;
+  final Color headerDayNameTextColor;
+  final Color calendarBackgroundColor;
+
+  final String fontFamilyRegular;
+  final String fontFamilyMedium;
+  final String fontFamilyBold;
 
   @override
   _DatePickerDialogState createState() => new _DatePickerDialogState();
 }
 
 class _DatePickerDialogState extends State<_DatePickerDialog> {
+  Color _selectedDayItemBackgroundColor = Color(0xFF6547AD);
+  Color _rangeItemsBackgroundColor = Color(0xFF291D47);
+  Color _selectedDayTextColor = Colors.white;
+  Color _disabledDayTextColor = Colors.white12;
+  Color _headerDayNameTextColor = Color(0xFFFF6F71);
+  Color _calendarBackgroundColor = Color(0xFF47327A);
+
+  String _fontFamilyRegular = "TTChocolatesRegular";
+  String _fontFamilyMedium = "TTChocolatesMedium";
+  String _fontFamilyBold = "TTChocolatesDemiBold";
+
   @override
   void initState() {
     super.initState();
     _selectedFirstDate = widget.initialFirstDate;
     _selectedLastDate = widget.initialLastDate;
     _mode = widget.initialDatePickerMode;
+
+    if (widget.selectedDayItemBackgroundColor != null) {
+      _selectedDayItemBackgroundColor = widget.selectedDayItemBackgroundColor;
+    }
+    if (widget.rangeItemsBackgroundColor != null) {
+      _rangeItemsBackgroundColor = widget.rangeItemsBackgroundColor;
+    }
+    if (widget.selectedDayTextColor != null) {
+      _selectedDayTextColor = widget.selectedDayTextColor;
+    }
+    if (widget.disabledDayTextColor != null) {
+      _disabledDayTextColor = widget.disabledDayTextColor;
+    }
+    if (widget.headerDayNameTextColor != null) {
+      _headerDayNameTextColor = widget.headerDayNameTextColor;
+    }
+    if (widget.calendarBackgroundColor != null) {
+      _calendarBackgroundColor = widget.calendarBackgroundColor;
+    }
+    if (widget.fontFamilyRegular != null) {
+      _fontFamilyRegular = widget.fontFamilyRegular;
+    }
+    if (widget.fontFamilyMedium != null) {
+      _fontFamilyMedium = widget.fontFamilyMedium;
+    }
+    if (widget.fontFamilyBold != null) {
+      _fontFamilyBold = widget.fontFamilyBold;
+    }
   }
 
   bool _announcedInitialDate = false;
@@ -1271,7 +1374,17 @@ class _DatePickerDialogState extends State<_DatePickerDialog> {
             lastDate: widget.lastDate,
             selectableDayPredicate: widget.selectableDayPredicate,
             icArrowLeftPath: widget.icArrowLeftPath,
-            icArrowRightPath: widget.icArrowRightPath);
+            icArrowRightPath: widget.icArrowRightPath,
+            selectedDayItemBackgroundColor: _selectedDayItemBackgroundColor,
+            rangeItemsBackgroundColor: _rangeItemsBackgroundColor,
+            selectedDayTextColor: _selectedDayTextColor,
+            disabledDayTextColor: _disabledDayTextColor,
+            headerDayNameTextColor: _headerDayNameTextColor,
+            calendarBackgroundColor: _calendarBackgroundColor,
+            fontFamilyMedium: _fontFamilyMedium,
+            fontFamilyRegular: _fontFamilyRegular,
+            fontFamilyBold: _fontFamilyBold
+        );
       case DatePickerMode.year:
         return new YearPicker(
           key: _pickerKey,
@@ -1477,19 +1590,27 @@ Future<List<DateTime>> showDatePicker(
   );
 }
 
-Widget getDatePicker(
-    {@required BuildContext context,
-    @required DateTime initialFirstDate,
-    @required DateTime initialLastDate,
-    @required DateTime firstDate,
-    @required DateTime lastDate,
-    SelectableDayPredicate selectableDayPredicate,
-    DatePickerMode initialDatePickerMode = DatePickerMode.day,
-    Locale locale,
-    TextDirection textDirection,
-    Function cb,
-    String icArrowLeftPath,
-    String icArrowRightPath}) {
+Widget getDatePicker({@required BuildContext context,
+  @required DateTime initialFirstDate,
+  @required DateTime initialLastDate,
+  @required DateTime firstDate,
+  @required DateTime lastDate,
+  SelectableDayPredicate selectableDayPredicate,
+  DatePickerMode initialDatePickerMode = DatePickerMode.day,
+  Locale locale,
+  TextDirection textDirection,
+  Function cb,
+  String icArrowLeftPath,
+  String icArrowRightPath,
+  Color selectedDayItemBackgroundColor,
+  Color rangeItemsBackgroundColor,
+  Color selectedDayTextColor,
+  Color disabledDayTextColor,
+  Color headerDayNameTextColor,
+  Color calendarBackgroundColor,
+  String fontFamilyRegular,
+  String fontFamilyMedium,
+  String fontFamilyBold}) {
   assert(!initialFirstDate.isBefore(firstDate),
       'initialDate must be on or after firstDate');
   assert(!initialLastDate.isAfter(lastDate),
@@ -1515,7 +1636,16 @@ Widget getDatePicker(
       initialDatePickerMode: initialDatePickerMode,
       cb: cb,
       icArrowLeftPath: icArrowLeftPath,
-      icArrowRightPath: icArrowRightPath);
+      icArrowRightPath: icArrowRightPath,
+      selectedDayItemBackgroundColor: selectedDayItemBackgroundColor,
+      rangeItemsBackgroundColor: rangeItemsBackgroundColor,
+      selectedDayTextColor: selectedDayTextColor,
+      disabledDayTextColor: disabledDayTextColor,
+      headerDayNameTextColor: headerDayNameTextColor,
+      calendarBackgroundColor: calendarBackgroundColor,
+      fontFamilyRegular: fontFamilyRegular,
+      fontFamilyMedium: fontFamilyMedium,
+      fontFamilyBold: fontFamilyBold);
 
   if (textDirection != null) {
     child = new Directionality(
